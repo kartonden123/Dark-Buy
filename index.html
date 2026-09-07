@@ -1,25 +1,38 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
   <title>Dark Buy</title>
-  <link rel="stylesheet"
+
+  <link
+    rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
 
   <style>
+
     :root {
       --bg: #05050a;
-      --panel: rgba(15, 13, 25, .82);
+      --panel: rgba(15, 13, 25, .86);
+      --panel2: rgba(20, 17, 34, .92);
       --line: rgba(255,255,255,.09);
       --purple: #8b5cf6;
       --cyan: #20f5d0;
       --pink: #ff3dbd;
       --text: #f7f5ff;
-      --muted: #9691a8;
+      --muted: #9994ad;
+      --danger: #ff5470;
+      --yellow: #ffd45a;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -29,10 +42,25 @@
       margin: 0;
       min-height: 100vh;
       color: var(--text);
+
       background:
-        radial-gradient(circle at 15% 10%, #6425c52c, transparent 30%),
-        radial-gradient(circle at 90% 25%, #00ffd51c, transparent 28%),
-        linear-gradient(135deg, #05050a, #090711 50%, #04070b);
+        radial-gradient(
+          circle at 10% 10%,
+          #6825c62b,
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 30%,
+          #00ffd51b,
+          transparent 28%
+        ),
+        linear-gradient(
+          135deg,
+          #05050a,
+          #090711 50%,
+          #04070b
+        );
+
       overflow-x: hidden;
     }
 
@@ -41,10 +69,19 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: .14;
+      opacity: .13;
+
       background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+        linear-gradient(
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        );
+
       background-size: 42px 42px;
       z-index: -2;
     }
@@ -55,16 +92,18 @@
       height: 330px;
       border-radius: 50%;
       filter: blur(90px);
-      opacity: .18;
+      opacity: .16;
       pointer-events: none;
       z-index: -1;
-      animation: drift 12s ease-in-out infinite alternate;
+
+      animation:
+        drift 12s ease-in-out infinite alternate;
     }
 
     .orb.one {
       background: var(--purple);
-      left: -170px;
-      top: 10%;
+      left: -180px;
+      top: 8%;
     }
 
     .orb.two {
@@ -83,17 +122,24 @@
 
     @keyframes drift {
       to {
-        transform: translate(130px, 80px) scale(1.3);
+        transform:
+          translate(130px,80px)
+          scale(1.3);
       }
     }
 
     nav {
       position: sticky;
       top: 0;
-      z-index: 50;
-      background: rgba(5,5,10,.7);
+      z-index: 100;
+
+      background:
+        rgba(5,5,10,.72);
+
       backdrop-filter: blur(22px);
-      border-bottom: 1px solid var(--line);
+
+      border-bottom:
+        1px solid var(--line);
     }
 
     nav strong {
@@ -102,7 +148,8 @@
 
     nav strong span {
       color: var(--cyan);
-      text-shadow: 0 0 18px var(--cyan);
+      text-shadow:
+        0 0 18px var(--cyan);
     }
 
     nav a {
@@ -111,20 +158,46 @@
 
     nav a:hover {
       color: var(--cyan);
-      text-shadow: 0 0 12px var(--cyan);
+      text-shadow:
+        0 0 12px var(--cyan);
+    }
+
+    .brand-button {
+      cursor: pointer;
     }
 
     main.container {
       padding-top: 2rem;
-      padding-bottom: 3rem;
+      padding-bottom: 4rem;
+    }
+
+    .view {
+      display: none;
+      animation:
+        pageIn .45s ease both;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
     }
 
     .hero {
-      position: relative;
-      min-height: 430px;
+      min-height: 440px;
       display: flex;
       align-items: center;
-      padding: 3rem 0;
+      position: relative;
     }
 
     .hero-copy {
@@ -138,31 +211,44 @@
       font-size: .7rem;
       letter-spacing: .25em;
       text-transform: uppercase;
-      animation: pulse 2s infinite;
+
+      animation:
+        pulse 2s infinite;
     }
 
     @keyframes pulse {
       50% {
         opacity: .55;
-        text-shadow: 0 0 20px var(--cyan);
+        text-shadow:
+          0 0 20px var(--cyan);
       }
     }
 
     .hero h1 {
-      font-size: clamp(3.5rem, 11vw, 7rem);
+      font-size:
+        clamp(3.5rem, 11vw, 7rem);
+
       line-height: .86;
       letter-spacing: -.07em;
       margin: .8rem 0;
-      background: linear-gradient(
-        100deg,
-        #fff 10%,
-        #a78bfa 48%,
-        #20f5d0 85%
-      );
+
+      background:
+        linear-gradient(
+          100deg,
+          #fff 10%,
+          #a78bfa 48%,
+          #20f5d0 85%
+        );
+
       background-size: 200% auto;
+
       -webkit-background-clip: text;
+      background-clip: text;
+
       color: transparent;
-      animation: gradient 5s linear infinite;
+
+      animation:
+        gradient 5s linear infinite;
     }
 
     @keyframes gradient {
@@ -179,66 +265,99 @@
 
     .hero-actions {
       display: flex;
-      gap: .7rem;
       flex-wrap: wrap;
+      gap: .7rem;
       margin-top: 1.7rem;
     }
 
     .hero-actions a {
       transition: .3s;
-      box-shadow: 0 0 30px #8b5cf633;
+      box-shadow:
+        0 0 30px #8b5cf633;
     }
 
     .hero-actions a:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 40px #8b5cf655;
+      transform:
+        translateY(-4px)
+        scale(1.02);
+
+      box-shadow:
+        0 12px 40px #8b5cf655;
     }
 
     .hero::after {
       content: "";
       position: absolute;
+
       width: 260px;
       height: 260px;
-      border: 1px solid #8b5cf655;
+
+      border:
+        1px solid #8b5cf655;
+
       border-radius: 50%;
+
       right: 7%;
-      top: 14%;
+      top: 15%;
+
       box-shadow:
         0 0 80px #8b5cf622,
         inset 0 0 80px #8b5cf611;
-      animation: spin 18s linear infinite;
+
+      animation:
+        spin 18s linear infinite;
     }
 
     .hero::before {
       content: "";
       position: absolute;
+
       width: 190px;
       height: 190px;
-      border: 1px dashed #20f5d066;
+
+      border:
+        1px dashed #20f5d066;
+
       border-radius: 50%;
+
       right: 13%;
-      top: 22%;
-      animation: spin 10s linear infinite reverse;
+      top: 23%;
+
+      animation:
+        spin 10s linear infinite reverse;
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3,1fr);
+      grid-template-columns:
+        repeat(3,1fr);
+
       gap: .8rem;
       margin-bottom: 2rem;
     }
 
     .stat {
       padding: 1rem;
-      border: 1px solid var(--line);
+
+      border:
+        1px solid var(--line);
+
       border-radius: 16px;
-      background: var(--panel);
-      backdrop-filter: blur(14px);
-      animation: float 5s ease-in-out infinite;
+
+      background:
+        var(--panel);
+
+      backdrop-filter:
+        blur(14px);
+
+      animation:
+        float 5s ease-in-out infinite;
     }
 
     .stat:nth-child(2) {
@@ -259,27 +378,29 @@
     }
 
     @keyframes float {
-      50% { transform: translateY(-6px); }
+      50% {
+        transform: translateY(-6px);
+      }
     }
 
     .demo {
-      margin: 1rem 0 2rem;
-      padding: 1rem 1.2rem;
-      border: 1px dashed #8b5cf655;
+      margin:
+        1rem 0 2rem;
+
+      padding:
+        1rem 1.2rem;
+
+      border:
+        1px dashed #8b5cf655;
+
       border-radius: 18px;
-      background: linear-gradient(
-        90deg,
-        #8b5cf60c,
-        #20f5d008
-      );
-    }
 
-    .section-head {
-      margin-top: 2rem;
-    }
-
-    .section-head p {
-      color: var(--muted);
+      background:
+        linear-gradient(
+          90deg,
+          #8b5cf60c,
+          #20f5d008
+        );
     }
 
     .toolbar {
@@ -288,41 +409,60 @@
       margin: 1.2rem 0;
     }
 
-    .toolbar input,
-    .toolbar select {
+    .toolbar > * {
       margin: 0;
     }
 
     .task-grid {
       display: grid;
+
       grid-template-columns:
-        repeat(auto-fit, minmax(260px, 1fr));
+        repeat(
+          auto-fit,
+          minmax(260px,1fr)
+        );
+
       gap: 1rem;
     }
 
     .task {
       position: relative;
       overflow: hidden;
-      border: 1px solid var(--line);
+
+      border:
+        1px solid var(--line);
+
       border-radius: 20px;
+
       background:
         linear-gradient(
           145deg,
-          rgba(20,17,35,.88),
-          rgba(8,9,16,.9)
+          rgba(20,17,35,.9),
+          rgba(8,9,16,.92)
         );
-      backdrop-filter: blur(16px);
-      box-shadow: 0 15px 50px #0007;
-      animation: cardIn .6s ease both;
+
+      backdrop-filter:
+        blur(16px);
+
+      box-shadow:
+        0 15px 50px #0007;
+
+      animation:
+        cardIn .55s ease both;
+
       transition:
-        transform .35s,
-        border-color .35s,
-        box-shadow .35s;
+        transform .3s,
+        border-color .3s,
+        box-shadow .3s;
     }
 
     .task:hover {
-      transform: translateY(-9px);
-      border-color: #8b5cf699;
+      transform:
+        translateY(-8px);
+
+      border-color:
+        #8b5cf699;
+
       box-shadow:
         0 25px 70px #000,
         0 0 30px #8b5cf622;
@@ -331,47 +471,38 @@
     @keyframes cardIn {
       from {
         opacity: 0;
-        transform: translateY(25px) scale(.96);
+        transform:
+          translateY(25px)
+          scale(.97);
       }
+
       to {
         opacity: 1;
         transform: none;
       }
     }
 
-    .task::before {
-      content: "";
-      position: absolute;
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: var(--purple);
-      filter: blur(55px);
-      opacity: .1;
-      right: -50px;
-      top: -50px;
-      transition: .5s;
-    }
-
-    .task:hover::before {
-      opacity: .28;
-      transform: scale(1.5);
-    }
-
-    .task-top,
-    .meta {
+    .task-top {
       display: flex;
       justify-content: space-between;
-      gap: .6rem;
       align-items: center;
+      gap: .5rem;
     }
 
     .badge {
       font-size: .68rem;
+
       color: var(--cyan);
-      border: 1px solid #20f5d044;
-      background: #20f5d00d;
-      padding: .28rem .55rem;
+
+      border:
+        1px solid #20f5d044;
+
+      background:
+        #20f5d00d;
+
+      padding:
+        .28rem .55rem;
+
       border-radius: 999px;
     }
 
@@ -379,23 +510,32 @@
       color: var(--cyan);
       font-weight: 800;
       font-size: 1.2rem;
-      text-shadow: 0 0 15px #20f5d055;
+
+      text-shadow:
+        0 0 15px #20f5d055;
     }
 
     .task h3 {
-      margin: .9rem 0 .5rem;
+      margin:
+        .9rem 0 .5rem;
     }
 
     .meta {
-      justify-content: flex-start;
+      display: flex;
       flex-wrap: wrap;
+      gap: .45rem;
+
       color: #aaa5b9;
       font-size: .8rem;
     }
 
     .meta span {
-      padding: .35rem .5rem;
-      background: #ffffff06;
+      padding:
+        .35rem .5rem;
+
+      background:
+        #ffffff06;
+
       border-radius: 8px;
     }
 
@@ -411,104 +551,259 @@
 
     .empty {
       text-align: center;
-      padding: 3rem 1rem;
-      border: 1px dashed var(--line);
+
+      padding:
+        3rem 1rem;
+
+      border:
+        1px dashed var(--line);
+
       border-radius: 20px;
+
       color: var(--muted);
     }
 
     .empty-icon {
       font-size: 3rem;
       color: var(--cyan);
-      text-shadow: 0 0 25px var(--cyan);
-      margin-bottom: .5rem;
+
+      text-shadow:
+        0 0 25px var(--cyan);
     }
 
-    #create article {
-      border: 1px solid var(--line);
-      border-radius: 24px;
+    .form-card,
+    .profile-card {
       background:
         linear-gradient(
           145deg,
           #120e20dd,
           #080b11dd
         );
-      box-shadow: 0 25px 80px #0008;
-    }
 
-    input,
-    select,
-    textarea {
-      background: #080a10cc !important;
-      border-color: #ffffff10 !important;
-      transition: .25s !important;
-    }
+      border:
+        1px solid var(--line);
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #8b5cf688 !important;
-      box-shadow:
-        0 0 0 .2rem #8b5cf611,
-        0 0 25px #8b5cf622 !important;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit,minmax(200px,1fr));
-      gap: 1rem;
-      margin: 1rem 0 3rem;
-    }
-
-    .feature {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 1.3rem;
-      background: #0b0b12aa;
-      transition: .3s;
-    }
-
-    .feature:hover {
-      transform: translateY(-7px);
-      border-color: #20f5d055;
-      box-shadow: 0 15px 40px #0008;
-    }
-
-    .feature .ico {
-      font-size: 1.7rem;
-      color: var(--cyan);
-      text-shadow: 0 0 20px var(--cyan);
-    }
-
-    .feature p {
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    #profile article {
-      text-align: center;
-      border: 1px solid var(--line);
       border-radius: 24px;
-      background: #0b0b12aa;
+
+      box-shadow:
+        0 25px 80px #0008;
+    }
+
+    .profile-card {
+      text-align: center;
     }
 
     .avatar {
-      font-size: 3rem;
+      width: 90px;
+      height: 90px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin: auto;
+
+      border-radius: 50%;
+
+      border:
+        1px solid #20f5d066;
+
+      background:
+        radial-gradient(
+          circle,
+          #20f5d022,
+          #8b5cf611
+        );
+
       color: var(--cyan);
-      text-shadow: 0 0 25px var(--cyan);
+
+      font-size: 2rem;
+
+      box-shadow:
+        0 0 40px #20f5d022;
+
+      animation:
+        avatarPulse 3s infinite;
+    }
+
+    @keyframes avatarPulse {
+      50% {
+        box-shadow:
+          0 0 60px #8b5cf633;
+      }
+    }
+
+    .status {
+      display: inline-flex;
+
+      padding:
+        .35rem .7rem;
+
+      border-radius: 999px;
+
+      font-size: .75rem;
+      font-weight: 700;
+    }
+
+    .status.available {
+      color: var(--cyan);
+      background: #20f5d012;
+      border: 1px solid #20f5d044;
+    }
+
+    .status.taken {
+      color: var(--yellow);
+      background: #ffd45a12;
+      border: 1px solid #ffd45a44;
+    }
+
+    .status.progress {
+      color: #a78bfa;
+      background: #8b5cf612;
+      border: 1px solid #8b5cf644;
+    }
+
+    .status.completed {
+      color: #68ff8c;
+      background: #68ff8c12;
+      border: 1px solid #68ff8c44;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 1rem;
+
+      background:
+        rgba(0,0,0,.72);
+
+      backdrop-filter:
+        blur(14px);
+
+      z-index: 200;
+    }
+
+    .modal.show {
+      display: flex;
+      animation:
+        modalBg .25s ease both;
+    }
+
+    @keyframes modalBg {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      width: min(620px,100%);
+
+      max-height:
+        90vh;
+
+      overflow-y:
+        auto;
+
+      background:
+        linear-gradient(
+          145deg,
+          #171226,
+          #080a11
+        );
+
+      border:
+        1px solid #8b5cf655;
+
+      border-radius: 24px;
+
+      padding: 1.3rem;
+
+      box-shadow:
+        0 30px 100px #000;
+      
+      animation:
+        modalIn .35s ease both;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform:
+          translateY(30px)
+          scale(.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-actions button {
+      flex: 1;
+    }
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      transform:
+        translate(-50%,30px);
+
+      opacity: 0;
+
+      z-index: 500;
+
+      padding:
+        .8rem 1.1rem;
+
+      border:
+        1px solid #20f5d055;
+
+      border-radius: 14px;
+
+      background:
+        rgba(10,10,17,.92);
+
+      backdrop-filter:
+        blur(16px);
+
+      box-shadow:
+        0 15px 50px #000;
+
+      pointer-events: none;
+
+      transition: .3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform:
+        translate(-50%,0);
     }
 
     footer {
-      padding: 2rem 0;
-      color: #666277;
-    }
+      padding:
+        2rem 0;
 
-    footer a {
-      color: #918ba3;
+      color:
+        #666277;
     }
 
     @media (max-width:700px) {
+
       nav ul li:not(:first-child) {
         display: none;
       }
@@ -519,13 +814,14 @@
 
       .hero::after,
       .hero::before {
-        right: -70px;
-        top: 10%;
-        opacity: .4;
+        right: -80px;
+        top: 8%;
+        opacity: .35;
       }
 
       .hero h1 {
-        font-size: clamp(3.5rem,20vw,6rem);
+        font-size:
+          clamp(3.5rem,20vw,6rem);
       }
 
       .stats {
@@ -540,11 +836,12 @@
         flex-direction: column;
       }
 
-      .toolbar input,
-      .toolbar select {
+      .toolbar > * {
         width: 100%;
       }
+
     }
+
   </style>
 </head>
 
@@ -555,242 +852,290 @@
 <div class="orb three"></div>
 
 <nav class="container-fluid">
+
   <ul>
     <li>
-      <strong>◈ DARK <span>BUY</span></strong>
+      <strong
+        class="brand-button"
+        onclick="showView('home')">
+        ◈ DARK <span>BUY</span>
+      </strong>
     </li>
   </ul>
 
   <ul>
-    <li><a href="#tasks">Задания</a></li>
-    <li><a href="#create">Создать</a></li>
-    <li><a href="#profile" role="button">◉ Профиль</a></li>
+
+    <li>
+      <a onclick="showView('home')">
+        Задания
+      </a>
+    </li>
+
+    <li>
+      <a onclick="showView('create')">
+        Создать
+      </a>
+    </li>
+
+    <li>
+      <a onclick="showView('mine')">
+        Мои
+      </a>
+    </li>
+
+    <li>
+      <a
+        role="button"
+        onclick="showView('profile')">
+        Профиль
+      </a>
+    </li>
+
   </ul>
+
 </nav>
+
 
 <main class="container">
 
-  <div class="grid">
-    <section>
 
-      <div class="hero">
-        <div class="hero-copy">
+  <!-- HOME -->
 
-          <div class="eyebrow">
-            ● anonymous · school · online
-          </div>
+  <section
+    id="view-home"
+    class="view active">
 
-          <h1>
-            Делай.<br>
-            Бери.<br>
-            Получай.
-          </h1>
+    <div class="hero">
 
-          <p>
-            Dark Buy — площадка для школьных поручений.
-            Создавай реальные задания и выполняй задания других
-            пользователей.
-          </p>
+      <div class="hero-copy">
 
-          <div class="hero-actions">
-            <a href="#tasks" role="button">
-              Смотреть задания ↓
-            </a>
-
-            <a href="#create"
-               role="button"
-               class="secondary">
-              ＋ Создать своё
-            </a>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="stats">
-
-        <div class="stat">
-          <b id="taskCount">0</b>
-          <small>доступных заданий</small>
+        <div class="eyebrow">
+          ● anonymous · school · online
         </div>
 
-        <div class="stat">
-          <b>100%</b>
-          <small>анонимный профиль</small>
-        </div>
+        <h1>
+          Делай.<br>
+          Бери.<br>
+          Получай.
+        </h1>
 
-        <div class="stat">
-          <b>DEMO</b>
-          <small>без настоящих платежей</small>
-        </div>
-
-      </div>
-
-      <div class="demo">
-        ⚡ <strong>DEMO MODE</strong> —
-        настоящие деньги не переводятся.
-        Платежи пока полностью отключены.
-      </div>
-
-      <div class="section-head" id="tasks">
-        <h2>Задания</h2>
         <p>
-          Здесь отображаются только задания,
-          которые создали пользователи.
+          Dark Buy — площадка для небольших
+          школьных поручений. Создавай задания
+          и выполняй задания других пользователей.
         </p>
-      </div>
 
-      <div class="toolbar">
+        <div class="hero-actions">
 
-        <input
-          id="search"
-          type="search"
-          placeholder="⌕  Найти задание..."
-          aria-label="Поиск задания">
+          <a
+            role="button"
+            onclick="scrollToTasks()">
+            Смотреть задания ↓
+          </a>
 
-        <select id="filter"
-                aria-label="Фильтр">
-          <option value="all">
-            Все
-          </option>
+          <a
+            role="button"
+            class="secondary"
+            onclick="showView('create')">
+            ＋ Создать своё
+          </a>
 
-          <option value="break">
-            На перемене
-          </option>
-
-          <option value="lesson">
-            На уроке
-          </option>
-
-          <option value="other">
-            Другое время
-          </option>
-        </select>
+        </div>
 
       </div>
 
-      <div
-        class="task-grid"
-        id="taskGrid">
+    </div>
+
+
+    <div class="stats">
+
+      <div class="stat">
+        <b id="taskCount">0</b>
+        <small>
+          доступных заданий
+        </small>
       </div>
 
-      <h2 style="margin-top:3rem">
-        Dark Buy
-      </h2>
-
-      <div class="features">
-
-        <article class="feature">
-          <div class="ico">◉</div>
-          <strong>Анонимность</strong>
-          <p>
-            В приложении не нужно показывать
-            настоящее имя пользователя.
-          </p>
-        </article>
-
-        <article class="feature">
-          <div class="ico">⌁</div>
-          <strong>Статусы</strong>
-          <p>
-            Доступно → Взято →
-            Выполняется → Выполнено.
-          </p>
-        </article>
-
-        <article class="feature">
-          <div class="ico">⌬</div>
-          <strong>Без оплаты</strong>
-          <p>
-            Сейчас это тестовая версия
-            без реальных денежных переводов.
-          </p>
-        </article>
-
+      <div class="stat">
+        <b>ANON</b>
+        <small>
+          без настоящих имён
+        </small>
       </div>
 
-    </section>
-  </div>
+      <div class="stat">
+        <b>FREE</b>
+        <small>
+          без платежей
+        </small>
+      </div>
 
-</main>
+    </div>
 
-<section id="create"
-         aria-label="Создание задания">
 
-  <div class="container">
+    <div class="demo">
 
-    <article>
+      ⚡ <strong>DEMO PAYMENTS OFF</strong>
+
+      <br>
+
+      Денежные переводы отключены.
+      Вознаграждение отображается только
+      как сумма внутри задания.
+
+    </div>
+
+
+    <h2 id="tasks">
+      Доступные задания
+    </h2>
+
+    <p style="color:var(--muted)">
+      Здесь отображаются задания,
+      созданные пользователями.
+    </p>
+
+
+    <div class="toolbar">
+
+      <input
+        id="search"
+        type="search"
+        placeholder="⌕ Найти задание...">
+
+      <select id="filter">
+
+        <option value="all">
+          Все
+        </option>
+
+        <option value="lesson">
+          На уроке
+        </option>
+
+        <option value="break">
+          На перемене
+        </option>
+
+        <option value="other">
+          Другое время
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div
+      id="taskGrid"
+      class="task-grid">
+    </div>
+
+  </section>
+
+
+  <!-- CREATE -->
+
+  <section
+    id="view-create"
+    class="view">
+
+    <article class="form-card">
 
       <hgroup>
-        <h2>＋ Новое задание</h2>
+
+        <h2>
+          ＋ Создать задание
+        </h2>
 
         <h3>
-          Заполни все обязательные поля.
+          Все поля со звездочкой обязательны.
         </h3>
+
       </hgroup>
 
+
       <form id="createForm">
+
+        <label>
+
+          Что нужно принести или сделать *
+
+          <input
+            id="what"
+            maxlength="300"
+            required
+            placeholder="Например: принеси сок">
+
+        </label>
+
 
         <div class="grid">
 
           <label>
-            Что нужно принести или сделать *
-            <input
-              id="what"
-              required
-              placeholder="Например: принеси сок">
-          </label>
 
-          <label>
             Вознаграждение, ₽ *
+
             <input
               id="reward"
               type="number"
               min="1"
+              max="100000"
               required
               placeholder="100">
+
           </label>
 
-        </div>
-
-        <div class="grid">
 
           <label>
+
             Класс / кабинет *
+
             <input
               id="place"
+              maxlength="100"
               required
               placeholder="Кабинет 204">
-          </label>
 
-          <label>
-            Когда выполнить *
-            <select id="when" required>
-
-              <option value="lesson">
-                На уроке
-              </option>
-
-              <option value="break">
-                На перемене
-              </option>
-
-              <option value="other">
-                Другое время
-              </option>
-
-            </select>
           </label>
 
         </div>
 
+
         <label>
+
+          Когда выполнить *
+
+          <select id="when">
+
+            <option value="lesson">
+              На уроке
+            </option>
+
+            <option value="break">
+              На перемене
+            </option>
+
+            <option value="other">
+              Другое время
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+
           Дополнительные комментарии
+
           <textarea
             id="comment"
-            placeholder="Например: до начала 3-го урока">
-          </textarea>
+            maxlength="1000"
+            placeholder="Дополнительная информация"></textarea>
+
         </label>
+
 
         <button type="submit">
           Опубликовать задание →
@@ -800,368 +1145,1539 @@
 
     </article>
 
-  </div>
+  </section>
 
-</section>
 
-<section id="profile"
-         aria-label="Профиль">
+  <!-- MINE -->
 
-  <div class="container">
+  <section
+    id="view-mine"
+    class="view">
 
-    <article>
+    <h2>
+      Мои задания
+    </h2>
 
-      <div class="avatar">◉</div>
+    <p style="color:var(--muted)">
+      Здесь находятся созданные тобой
+      и взятые тобой задания.
+    </p>
+
+    <div
+      id="mineGrid"
+      class="task-grid">
+    </div>
+
+  </section>
+
+
+  <!-- PROFILE -->
+
+  <section
+    id="view-profile"
+    class="view">
+
+    <article class="profile-card">
+
+      <div class="avatar">
+        ◉
+      </div>
 
       <h2>
         Анонимный пользователь
       </h2>
 
-      <p id="userId">
-        ID: создаётся...
+      <p
+        id="userId"
+        style="color:var(--muted)">
+        Загрузка...
       </p>
 
       <small>
         Настоящее имя не отображается.
       </small>
 
+      <hr>
+
+      <p>
+        Этот аккаунт создан анонимно.
+        Пароль и почта не требуются.
+      </p>
+
     </article>
 
-  </div>
+  </section>
 
-</section>
+</main>
+
 
 <footer class="container">
 
   <small>
-    <a href="#">
-      Dark Buy
-    </a>
-    •
-    <a href="#create">
-      Создать задание
-    </a>
-    •
-    <a href="#profile">
-      Профиль
-    </a>
+    Dark Buy • Anonymous Demo •
+    Payments disabled
   </small>
 
 </footer>
 
+
+<!-- DETAIL MODAL -->
+
+<div
+  id="detailModal"
+  class="modal"
+  onclick="closeModal(event)">
+
+  <div
+    class="modal-card"
+    onclick="event.stopPropagation()">
+
+    <div id="detailContent">
+    </div>
+
+  </div>
+
+</div>
+
+
+<div
+  id="toast"
+  class="toast">
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
 <script>
 
-  /*
-    DARK BUY
-    GitHub Pages / localStorage версия.
 
-    ВАЖНО:
-    Данные сейчас хранятся только
-    на конкретном устройстве и браузере.
-  */
+/*
+==================================================
+  SUPABASE CONFIG
+==================================================
 
-  const STORAGE_KEY = "dark_buy_tasks";
+  ВСТАВЬ СЮДА ДАННЫЕ ИЗ:
 
-  const labels = {
-    lesson: "На уроке",
-    break: "На перемене",
-    other: "Другое время"
-  };
+  Supabase
+  → Project Settings
+  → API
 
-  let tasks =
-    JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "[]"
-    );
+==================================================
+*/
 
-  function save() {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(tasks)
-    );
-  }
 
-  function escapeHTML(value) {
+const SUPABASE_URL =
+  "https://jnpndtlpsucsxhzjzqnl.supabase.co";
 
-    return String(value)
-      .replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      }[char]));
 
-  }
+const SUPABASE_ANON_KEY =
+  "sb_publishable_2ECP-xx_9h7EX9sKKCPS8w_CtQdB9sr";
 
-  function render() {
 
-    const search =
-      document
-        .getElementById("search")
-        .value
-        .toLowerCase()
-        .trim();
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-    const filter =
-      document
-        .getElementById("filter")
-        .value;
 
-    const available =
-      tasks.filter(task =>
-        task.status === "available"
-      );
+/*
+==================================================
+  STATE
+==================================================
+*/
 
-    const filtered =
-      available.filter(task => {
 
-        const matchesSearch =
-          task.what
-            .toLowerCase()
-            .includes(search);
+let currentUser = null;
+let allTasks = [];
+let selectedTask = null;
 
-        const matchesFilter =
-          filter === "all" ||
-          task.when === filter;
 
-        return matchesSearch &&
-               matchesFilter;
+/*
+==================================================
+  UI
+==================================================
+*/
 
-      });
 
-    document.getElementById("taskCount")
-      .textContent = available.length;
-
-    const grid =
-      document.getElementById("taskGrid");
-
-    if (filtered.length === 0) {
-
-      grid.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">⌁</div>
-          <h3>Заданий пока нет</h3>
-          <p>
-            Здесь появятся задания,
-            которые создадут реальные пользователи.
-          </p>
-          <a href="#create"
-             role="button">
-            Создать первое задание
-          </a>
-        </div>
-      `;
-
-      return;
-    }
-
-    grid.innerHTML =
-      filtered.map((task, index) => {
-
-        const realIndex =
-          tasks.indexOf(task);
-
-        return `
-          <article class="task">
-
-            <div class="task-top">
-
-              <span class="badge">
-                ● ДОСТУПНО
-              </span>
-
-              <span class="reward">
-                ${escapeHTML(task.reward)} ₽
-              </span>
-
-            </div>
-
-            <h3>
-              ${escapeHTML(task.what)}
-            </h3>
-
-            <div class="meta">
-
-              <span>
-                ⌖ ${escapeHTML(task.place)}
-              </span>
-
-              <span>
-                ◷ ${labels[task.when]}
-              </span>
-
-            </div>
-
-            <p>
-              ${
-                escapeHTML(
-                  task.comment ||
-                  "Без дополнительных комментариев"
-                )
-              }
-            </p>
-
-            <button
-              onclick="takeTask(${realIndex})">
-              Взять задание →
-            </button>
-
-          </article>
-        `;
-
-      }).join("");
-
-  }
-
-  function takeTask(index) {
-
-    const task = tasks[index];
-
-    if (!task ||
-        task.status !== "available") {
-      return;
-    }
-
-    task.status = "taken";
-
-    save();
-
-    render();
-
-    alert(
-      "✓ Задание взято.\n\n" +
-      "Статус: ВЗЯТО\n\n" +
-      "Это пока локальная демонстрация."
-    );
-
-  }
+function showView(name) {
 
   document
-    .getElementById("createForm")
-    .addEventListener("submit", event => {
+    .querySelectorAll(".view")
+    .forEach(view => {
 
-      event.preventDefault();
-
-      const what =
-        document.getElementById("what")
-          .value.trim();
-
-      const reward =
-        Number(
-          document.getElementById("reward")
-            .value
-        );
-
-      const place =
-        document.getElementById("place")
-          .value.trim();
-
-      const when =
-        document.getElementById("when")
-          .value;
-
-      const comment =
-        document.getElementById("comment")
-          .value.trim();
-
-      if (!what || !reward || !place) {
-
-        alert(
-          "Заполни все обязательные поля."
-        );
-
-        return;
-      }
-
-      tasks.unshift({
-
-        id:
-          "task-" +
-          Date.now() +
-          "-" +
-          Math.random()
-            .toString(36)
-            .slice(2, 7),
-
-        what,
-        reward,
-        place,
-        when,
-        comment,
-
-        status: "available",
-
-        createdAt:
-          new Date().toISOString()
-
-      });
-
-      save();
-
-      event.target.reset();
-
-      render();
-
-      location.hash = "tasks";
-
-      alert(
-        "✓ Задание опубликовано!"
-      );
+      view.classList.remove("active");
 
     });
 
-  document
-    .getElementById("search")
-    .addEventListener(
-      "input",
-      render
+
+  const view =
+    document.getElementById(
+      "view-" + name
     );
 
-  document
-    .getElementById("filter")
-    .addEventListener(
-      "change",
-      render
-    );
 
-  function generateUserId() {
+  if (view) {
+    view.classList.add("active");
+  }
 
-    let id =
-      localStorage.getItem(
-        "dark_buy_user_id"
-      );
 
-    if (!id) {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 
-      id =
-        "DB-" +
-        Math.random()
-          .toString(36)
-          .substring(2, 6)
-          .toUpperCase() +
-        "-" +
-        Math.random()
-          .toString(36)
-          .substring(2, 6)
-          .toUpperCase();
 
-      localStorage.setItem(
-        "dark_buy_user_id",
-        id
-      );
+  if (name === "mine") {
+    loadMine();
+  }
 
+}
+
+
+/*
+==================================================
+  TOAST
+==================================================
+*/
+
+
+let toastTimer;
+
+
+function toast(message) {
+
+  const element =
+    document.getElementById("toast");
+
+
+  element.textContent =
+    message;
+
+
+  element.classList.add("show");
+
+
+  clearTimeout(toastTimer);
+
+
+  toastTimer =
+    setTimeout(() => {
+
+      element.classList.remove("show");
+
+    }, 3000);
+
+}
+
+
+/*
+==================================================
+  ANONYMOUS AUTH
+==================================================
+*/
+
+
+async function ensureAuth() {
+
+  const {
+    data: {
+      session
     }
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
 
-    document.getElementById("userId")
-      .textContent =
-      "ID: " + id;
+
+  if (session) {
+
+    currentUser =
+      session.user;
+
+    updateProfile();
+
+    return;
 
   }
 
-  generateUserId();
-  render();
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .auth
+      .signInAnonymously();
+
+
+  if (error) {
+
+    console.error(error);
+
+    toast(
+      "Не удалось войти анонимно."
+    );
+
+    return;
+
+  }
+
+
+  currentUser =
+    data.user;
+
+  updateProfile();
+
+}
+
+
+/*
+==================================================
+  PROFILE
+==================================================
+*/
+
+
+function updateProfile() {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const uuid =
+    currentUser.id;
+
+
+  const short =
+    uuid
+      .replaceAll("-", "")
+      .substring(0, 8)
+      .toUpperCase();
+
+
+  document
+    .getElementById("userId")
+    .textContent =
+      "Anonymous ID: DB-" + short;
+
+}
+
+
+/*
+==================================================
+  LOAD TASKS
+==================================================
+*/
+
+
+async function loadTasks() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    toast(
+      "Не удалось загрузить задания."
+    );
+
+    return;
+
+  }
+
+
+  allTasks =
+    data || [];
+
+
+  renderTasks(
+    getFilteredTasks()
+  );
+
+
+  updateStats();
+
+}
+
+
+/*
+==================================================
+  FILTER
+==================================================
+*/
+
+
+function getFilteredTasks() {
+
+  const query =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filter =
+    document
+      .getElementById("filter")
+      .value;
+
+
+  return allTasks.filter(task => {
+
+    if (
+      task.status !==
+      "available"
+    ) {
+      return false;
+    }
+
+
+    const text =
+      (
+        task.what +
+        " " +
+        task.place +
+        " " +
+        (task.comment || "")
+      )
+      .toLowerCase();
+
+
+    const matchesSearch =
+      !query ||
+      text.includes(query);
+
+
+    const matchesFilter =
+      filter === "all" ||
+      task.when_type === filter;
+
+
+    return (
+      matchesSearch &&
+      matchesFilter
+    );
+
+  });
+
+}
+
+
+/*
+==================================================
+  RENDER TASKS
+==================================================
+*/
+
+
+function renderTasks(tasks) {
+
+  const grid =
+    document.getElementById(
+      "taskGrid"
+    );
+
+
+  if (!tasks.length) {
+
+    grid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ⌁
+        </div>
+
+        <h3>
+          Пока нет доступных заданий
+        </h3>
+
+        <p>
+          Здесь появятся реальные задания,
+          созданные пользователями.
+        </p>
+
+        <button
+          onclick="showView('create')">
+          Создать первое задание
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    tasks.map((task, index) => {
+
+      return `
+
+        <article
+          class="task"
+          style="animation-delay:${index * 60}ms">
+
+          <div class="task-top">
+
+            <span class="badge">
+              ● ДОСТУПНО
+            </span>
+
+            <span class="reward">
+              ${escapeHTML(task.reward)} ₽
+            </span>
+
+          </div>
+
+
+          <h3>
+            ${escapeHTML(task.what)}
+          </h3>
+
+
+          <div class="meta">
+
+            <span>
+              ⌖ ${escapeHTML(task.place)}
+            </span>
+
+            <span>
+              ◷ ${getWhenLabel(task.when_type)}
+            </span>
+
+          </div>
+
+
+          <p>
+            ${
+              escapeHTML(
+                task.comment ||
+                "Без дополнительных комментариев."
+              )
+            }
+          </p>
+
+
+          <button
+            onclick="openTask('${task.id}')">
+
+            Открыть задание →
+
+          </button>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/*
+==================================================
+  TASK DETAILS
+==================================================
+*/
+
+
+async function openTask(id) {
+
+  const task =
+    allTasks.find(
+      item => item.id === id
+    );
+
+
+  if (!task) {
+    return;
+  }
+
+
+  selectedTask =
+    task;
+
+
+  const mine =
+    currentUser &&
+    task.creator_id ===
+    currentUser.id;
+
+
+  document
+    .getElementById("detailContent")
+    .innerHTML = `
+
+      <span
+        class="status ${statusClass(task.status)}">
+
+        ${getStatusLabel(task.status)}
+
+      </span>
+
+
+      <h2 style="margin-top:1rem">
+        ${escapeHTML(task.what)}
+      </h2>
+
+
+      <div class="meta">
+
+        <span>
+          ⌖ ${escapeHTML(task.place)}
+        </span>
+
+        <span>
+          ◷ ${getWhenLabel(task.when_type)}
+        </span>
+
+      </div>
+
+
+      <h2
+        style="
+          color:var(--cyan);
+          margin-top:1.5rem;
+        ">
+
+        ${escapeHTML(task.reward)} ₽
+
+      </h2>
+
+
+      <p>
+        ${
+          escapeHTML(
+            task.comment ||
+            "Без дополнительных комментариев."
+          )
+        }
+      </p>
+
+
+      <hr>
+
+
+      <div class="modal-actions">
+
+        ${
+          task.status === "available" &&
+          !mine
+
+          ?
+
+          `
+            <button
+              onclick="takeTask('${task.id}')">
+              Взять задание
+            </button>
+          `
+
+          :
+
+          ""
+        }
+
+
+        ${
+          mine &&
+          task.status === "taken"
+
+          ?
+
+          `
+            <button
+              onclick="changeStatus(
+                '${task.id}',
+                'in_progress'
+              )">
+
+              Начать выполнение
+
+            </button>
+          `
+
+          :
+
+          ""
+        }
+
+
+        ${
+          task.taker_id ===
+          currentUser?.id &&
+          task.status === "in_progress"
+
+          ?
+
+          `
+            <button
+              onclick="changeStatus(
+                '${task.id}',
+                'completed'
+              )">
+
+              Отметить выполненным
+
+            </button>
+          `
+
+          :
+
+          ""
+        }
+
+
+        ${
+          mine
+
+          ?
+
+          `
+            <button
+              class="secondary"
+              onclick="deleteTask('${task.id}')">
+
+              Удалить
+
+            </button>
+          `
+
+          :
+
+          ""
+        }
+
+
+        <button
+          class="secondary"
+          onclick="closeDetail()">
+
+          Закрыть
+
+        </button>
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById("detailModal")
+    .classList.add("show");
+
+}
+
+
+function closeModal(event) {
+
+  if (
+    event.target.id ===
+    "detailModal"
+  ) {
+
+    closeDetail();
+
+  }
+
+}
+
+
+function closeDetail() {
+
+  document
+    .getElementById("detailModal")
+    .classList.remove("show");
+
+}
+
+
+/*
+==================================================
+  TAKE TASK
+==================================================
+*/
+
+
+async function takeTask(id) {
+
+  if (!currentUser) {
+
+    toast(
+      "Подожди, профиль ещё загружается."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .update({
+
+        taker_id:
+          currentUser.id,
+
+        status:
+          "taken",
+
+        taken_at:
+          new Date().toISOString()
+
+      })
+      .eq("id", id)
+      .eq("status", "available");
+
+
+  if (error) {
+
+    console.error(error);
+
+    toast(
+      "Не удалось взять задание."
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "✓ Задание взято!"
+  );
+
+
+  closeDetail();
+
+  await loadTasks();
+
+  await loadMine();
+
+}
+
+
+/*
+==================================================
+  CHANGE STATUS
+==================================================
+*/
+
+
+async function changeStatus(
+  id,
+  newStatus
+) {
+
+  const task =
+    allTasks.find(
+      item => item.id === id
+    );
+
+
+  if (!task) {
+    return;
+  }
+
+
+  const update = {
+    status: newStatus
+  };
+
+
+  if (
+    newStatus ===
+    "completed"
+  ) {
+
+    update.completed_at =
+      new Date().toISOString();
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .update(update)
+      .eq("id", id);
+
+
+  if (error) {
+
+    console.error(error);
+
+    toast(
+      "Не удалось изменить статус."
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Статус обновлён."
+  );
+
+
+  closeDetail();
+
+  await loadTasks();
+
+  await loadMine();
+
+}
+
+
+/*
+==================================================
+  DELETE
+==================================================
+*/
+
+
+async function deleteTask(id) {
+
+  const confirmed =
+    confirm(
+      "Удалить это задание?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .delete()
+      .eq("id", id);
+
+
+  if (error) {
+
+    console.error(error);
+
+    toast(
+      "Не удалось удалить задание."
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Задание удалено."
+  );
+
+
+  closeDetail();
+
+  await loadTasks();
+
+  await loadMine();
+
+}
+
+
+/*
+==================================================
+  CREATE TASK
+==================================================
+*/
+
+
+document
+  .getElementById("createForm")
+  .addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+
+      if (!currentUser) {
+
+        toast(
+          "Профиль ещё загружается."
+        );
+
+        return;
+
+      }
+
+
+      const what =
+        document
+          .getElementById("what")
+          .value
+          .trim();
+
+
+      const reward =
+        Number(
+          document
+            .getElementById("reward")
+            .value
+        );
+
+
+      const place =
+        document
+          .getElementById("place")
+          .value
+          .trim();
+
+
+      const whenType =
+        document
+          .getElementById("when")
+          .value;
+
+
+      const comment =
+        document
+          .getElementById("comment")
+          .value
+          .trim();
+
+
+      if (
+        !what ||
+        !reward ||
+        !place
+      ) {
+
+        toast(
+          "Заполни обязательные поля."
+        );
+
+        return;
+
+      }
+
+
+      const button =
+        event.target.querySelector(
+          "button[type='submit']"
+        );
+
+
+      button.disabled = true;
+      button.textContent =
+        "Публикация...";
+
+
+      const {
+        error
+      } =
+      await supabaseClient
+        .from("tasks")
+        .insert({
+
+          creator_id:
+            currentUser.id,
+
+          what:
+            what,
+
+          reward:
+            reward,
+
+          place:
+            place,
+
+          when_type:
+            whenType,
+
+          comment:
+            comment || null,
+
+          status:
+            "available"
+
+        });
+
+
+      button.disabled = false;
+
+      button.textContent =
+        "Опубликовать задание →";
+
+
+      if (error) {
+
+        console.error(error);
+
+        toast(
+          "Не удалось создать задание."
+        );
+
+        return;
+
+      }
+
+
+      event.target.reset();
+
+
+      toast(
+        "✓ Задание опубликовано!"
+      );
+
+
+      await loadTasks();
+
+      showView("home");
+
+      setTimeout(
+        scrollToTasks,
+        100
+      );
+
+    }
+  );
+
+
+/*
+==================================================
+  MY TASKS
+==================================================
+*/
+
+
+async function loadMine() {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .select("*")
+      .or(
+        `creator_id.eq.${currentUser.id},taker_id.eq.${currentUser.id}`
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  const grid =
+    document
+      .getElementById("mineGrid");
+
+
+  if (!data || !data.length) {
+
+    grid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ◉
+        </div>
+
+        <h3>
+          Здесь пока пусто
+        </h3>
+
+        <p>
+          Создай задание или возьми
+          доступное задание.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    data.map((task,index) => {
+
+      return `
+
+        <article
+          class="task"
+          style="animation-delay:${index * 60}ms">
+
+          <div class="task-top">
+
+            <span
+              class="status
+              ${statusClass(task.status)}">
+
+              ${getStatusLabel(task.status)}
+
+            </span>
+
+            <span class="reward">
+              ${escapeHTML(task.reward)} ₽
+            </span>
+
+          </div>
+
+
+          <h3>
+            ${escapeHTML(task.what)}
+          </h3>
+
+
+          <div class="meta">
+
+            <span>
+              ⌖ ${escapeHTML(task.place)}
+            </span>
+
+            <span>
+              ◷ ${getWhenLabel(task.when_type)}
+            </span>
+
+          </div>
+
+
+          <p>
+            ${
+              task.creator_id ===
+              currentUser.id
+
+              ? "Ты создал это задание."
+
+              : "Ты взял это задание."
+            }
+          </p>
+
+
+          <button
+            onclick="openTask('${task.id}')">
+
+            Открыть →
+
+          </button>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/*
+==================================================
+  HELPERS
+==================================================
+*/
+
+
+function getWhenLabel(value) {
+
+  const labels = {
+
+    lesson:
+      "На уроке",
+
+    break:
+      "На перемене",
+
+    other:
+      "Другое время"
+
+  };
+
+
+  return labels[value] ||
+    "Не указано";
+
+}
+
+
+function getStatusLabel(status) {
+
+  const labels = {
+
+    available:
+      "Доступно",
+
+    taken:
+      "Взято",
+
+    in_progress:
+      "Выполняется",
+
+    completed:
+      "Выполнено"
+
+  };
+
+
+  return labels[status] ||
+    status;
+
+}
+
+
+function statusClass(status) {
+
+  if (
+    status ===
+    "available"
+  ) {
+    return "available";
+  }
+
+
+  if (
+    status ===
+    "taken"
+  ) {
+    return "taken";
+  }
+
+
+  if (
+    status ===
+    "in_progress"
+  ) {
+    return "progress";
+  }
+
+
+  return "completed";
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(
+      /[&<>"']/g,
+      char => ({
+
+        "&":
+          "&amp;",
+
+        "<":
+          "&lt;",
+
+        ">":
+          "&gt;",
+
+        '"':
+          "&quot;",
+
+        "'":
+          "&#039;"
+
+      }[char])
+    );
+
+}
+
+
+/*
+==================================================
+  SEARCH
+==================================================
+*/
+
+
+document
+  .getElementById("search")
+  .addEventListener(
+    "input",
+    () => {
+
+      renderTasks(
+        getFilteredTasks()
+      );
+
+    }
+  );
+
+
+document
+  .getElementById("filter")
+  .addEventListener(
+    "change",
+    () => {
+
+      renderTasks(
+        getFilteredTasks()
+      );
+
+    }
+  );
+
+
+function scrollToTasks() {
+
+  showView("home");
+
+
+  setTimeout(() => {
+
+    document
+      .getElementById("tasks")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  }, 100);
+
+}
+
+
+function updateStats() {
+
+  const available =
+    allTasks.filter(
+      task =>
+        task.status ===
+        "available"
+    ).length;
+
+
+  document
+    .getElementById("taskCount")
+    .textContent =
+    available;
+
+}
+
+
+/*
+==================================================
+  START
+==================================================
+*/
+
+
+async function startApp() {
+
+  try {
+
+    await ensureAuth();
+
+    if (!currentUser) {
+      return;
+    }
+
+    await loadTasks();
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast(
+      "Ошибка запуска приложения."
+    );
+
+  }
+
+}
+
+
+startApp();
+
+
+/*
+==================================================
+  REALTIME
+
+  Если кто-то создаст/возьмёт задание,
+  список может обновляться автоматически.
+==================================================
+*/
+
+
+supabaseClient
+  .channel("dark-buy-tasks")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "tasks"
+    },
+    async () => {
+
+      await loadTasks();
+
+      const active =
+        document
+          .getElementById(
+            "view-mine"
+          )
+          .classList
+          .contains("active");
+
+
+      if (active) {
+        await loadMine();
+      }
+
+    }
+  )
+  .subscribe();
 
 </script>
 
 </body>
-                                         </html>
+  </html>
