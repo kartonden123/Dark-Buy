@@ -1,0 +1,2673 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Buy</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --primary: #c026d3;
+      --primary-hover: #e879f9;
+      --bg: #08070b;
+      --card: #111016;
+      --card2: #17151e;
+      --border: #292631;
+      --muted: #9d98a8;
+      --good: #4ade80;
+      --danger: #fb7185;
+      --warning: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(192,38,211,.16), transparent 35%),
+        radial-gradient(circle at 90% 20%, rgba(236,72,153,.10), transparent 30%),
+        var(--bg);
+      color: #f7f4fb;
+    }
+
+    nav {
+      background: rgba(8,7,11,.82);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    nav strong {
+      font-size: 1.2rem;
+      background: linear-gradient(90deg,#c026d3,#ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    main.container {
+      padding-top: 3rem;
+      padding-bottom: 4rem;
+    }
+
+    .page {
+      animation: fade .2s ease;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      padding: 3rem 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 8vw, 5rem);
+      margin-bottom: .5rem;
+      letter-spacing: -.06em;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg,#c026d3,#ec4899,#f472b6);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    article,
+    .task-card,
+    .admin-card,
+    .auth-card {
+      background: linear-gradient(145deg, rgba(23,21,30,.96), rgba(13,12,17,.96));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0,0,0,.25);
+    }
+
+    .task-card {
+      padding: 1.3rem;
+      margin-bottom: 1rem;
+      transition: .18s;
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      border-color: #49394e;
+    }
+
+    .reward {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #f0abfc;
+      white-space: nowrap;
+    }
+
+    .task-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .8rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .35rem .65rem;
+      border-radius: 999px;
+      background: #201c27;
+      color: #c9c4d0;
+      font-size: .82rem;
+    }
+
+    .pill.good {
+      color: var(--good);
+      background: rgba(74,222,128,.08);
+    }
+
+    .pill.warning {
+      color: var(--warning);
+      background: rgba(251,191,36,.08);
+    }
+
+    .pill.danger {
+      color: var(--danger);
+      background: rgba(251,113,133,.08);
+    }
+
+    button,
+    [role="button"] {
+      border-radius: 12px;
+    }
+
+    .primary-btn {
+      background: linear-gradient(90deg,#a21caf,#db2777);
+      border: 0;
+    }
+
+    .primary-btn:hover {
+      background: linear-gradient(90deg,#c026d3,#ec4899);
+    }
+
+    .secondary-btn {
+      background: #1b1821;
+      border: 1px solid var(--border);
+    }
+
+    .danger-btn {
+      background: rgba(190,24,93,.15);
+      border: 1px solid rgba(244,63,94,.3);
+      color: #fda4af;
+    }
+
+    .form-box {
+      max-width: 520px;
+      margin: 3rem auto;
+    }
+
+    .auth-card {
+      padding: 2rem;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 3.4rem;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: .45rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: 0;
+      color: #aaa3b5;
+    }
+
+    .password-toggle:hover {
+      color: white;
+      background: #211d28;
+    }
+
+    .error {
+      color: #fda4af;
+      background: rgba(127,29,29,.2);
+      border: 1px solid rgba(248,113,113,.2);
+      padding: .8rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .success {
+      color: #86efac;
+      background: rgba(20,83,45,.2);
+      border: 1px solid rgba(74,222,128,.2);
+      padding: .8rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    #boot {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .loader {
+      width: 42px;
+      height: 42px;
+      border: 3px solid #2b2632;
+      border-top-color: #d946ef;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .stat {
+      padding: 1.3rem;
+      border-radius: 16px;
+      background: #15131b;
+      border: 1px solid var(--border);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: .2rem;
+    }
+
+    .admin-table {
+      overflow-x: auto;
+    }
+
+    table {
+      margin: 0;
+    }
+
+    td,
+    th {
+      vertical-align: middle;
+    }
+
+    .small-btn {
+      padding: .45rem .7rem;
+      font-size: .82rem;
+      margin: 0;
+    }
+
+    footer {
+      padding-bottom: 2rem;
+      color: var(--muted);
+    }
+
+    figure {
+      margin: 2rem 0;
+    }
+
+    .visual {
+      min-height: 240px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(192,38,211,.55), transparent 25%),
+        radial-gradient(circle at 70% 65%, rgba(236,72,153,.45), transparent 25%),
+        linear-gradient(135deg,#110c16,#09080d);
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+    }
+
+    @media (max-width: 700px) {
+      nav ul:last-child li:nth-child(2) {
+        display: none;
+      }
+
+      .hero {
+        padding: 1.5rem 0;
+      }
+
+      main.container {
+        padding-top: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       BOOT
+  ====================================================== -->
+
+  <div id="boot">
+    <div>
+      <div class="loader"></div>
+      <strong>Dark Buy</strong>
+      <p class="muted">Проверяем аккаунт…</p>
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       AUTH
+  ====================================================== -->
+
+  <div id="auth" class="hidden">
+    <main class="container">
+      <div class="form-box">
+
+        <article class="auth-card">
+
+          <div id="registerBox">
+            <h1>Dark Buy</h1>
+            <p class="muted">Создай аккаунт и получай задания.</p>
+
+            <div id="registerError"></div>
+
+            <label>
+              Email
+              <input
+                type="email"
+                id="registerEmail"
+                placeholder="you@example.com"
+                autocomplete="email"
+              >
+            </label>
+
+            <label>
+              Пароль
+              <div class="password-wrap">
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Минимум 6 символов"
+                  autocomplete="new-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('registerPassword', this)"
+                  aria-label="Показать пароль"
+                >👁</button>
+              </div>
+            </label>
+
+            <label>
+              Повтори пароль
+              <div class="password-wrap">
+                <input
+                  type="password"
+                  id="registerPassword2"
+                  placeholder="Повтори пароль"
+                  autocomplete="new-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('registerPassword2', this)"
+                  aria-label="Показать пароль"
+                >👁</button>
+              </div>
+            </label>
+
+            <button
+              id="registerButton"
+              class="primary-btn"
+              onclick="register()"
+            >
+              Зарегистрироваться
+            </button>
+
+            <button
+              class="secondary-btn"
+              onclick="showLogin()"
+            >
+              Уже есть аккаунт
+            </button>
+          </div>
+
+
+          <div id="loginBox" class="hidden">
+            <h1>С возвращением</h1>
+            <p class="muted">Войди в Dark Buy.</p>
+
+            <div id="loginError"></div>
+
+            <label>
+              Email
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="you@example.com"
+                autocomplete="email"
+              >
+            </label>
+
+            <label>
+              Пароль
+              <div class="password-wrap">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Пароль"
+                  autocomplete="current-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('loginPassword', this)"
+                  aria-label="Показать пароль"
+                >👁</button>
+              </div>
+            </label>
+
+            <button
+              id="loginButton"
+              class="primary-btn"
+              onclick="login()"
+            >
+              Войти
+            </button>
+
+            <button
+              class="secondary-btn"
+              onclick="showRegister()"
+            >
+              Создать аккаунт
+            </button>
+
+            <button
+              class="secondary-btn"
+              onclick="showRecovery()"
+            >
+              Забыл пароль
+            </button>
+          </div>
+
+
+          <div id="recoveryBox" class="hidden">
+            <h2>Восстановление</h2>
+            <p class="muted">
+              Отправим ссылку для восстановления пароля.
+            </p>
+
+            <div id="recoveryError"></div>
+
+            <label>
+              Email
+              <input
+                type="email"
+                id="recoveryEmail"
+                placeholder="you@example.com"
+              >
+            </label>
+
+            <button
+              class="primary-btn"
+              onclick="sendRecovery()"
+            >
+              Отправить
+            </button>
+
+            <button
+              class="secondary-btn"
+              onclick="showLogin()"
+            >
+              Назад
+            </button>
+          </div>
+
+
+          <div id="updatePasswordBox" class="hidden">
+            <h2>Новый пароль</h2>
+
+            <div id="updatePasswordError"></div>
+
+            <label>
+              Новый пароль
+              <div class="password-wrap">
+                <input
+                  type="password"
+                  id="newPassword"
+                  autocomplete="new-password"
+                >
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('newPassword', this)"
+                  aria-label="Показать пароль"
+                >👁</button>
+              </div>
+            </label>
+
+            <button
+              class="primary-btn"
+              onclick="updatePassword()"
+            >
+              Сохранить пароль
+            </button>
+          </div>
+
+
+          <div id="confirmBox" class="hidden">
+            <h2>Проверь почту ✉️</h2>
+            <p>
+              Мы отправили письмо для подтверждения email.
+            </p>
+            <p class="muted">
+              После подтверждения вернись сюда и войди в аккаунт.
+            </p>
+
+            <button
+              class="primary-btn"
+              onclick="showLogin()"
+            >
+              Перейти ко входу
+            </button>
+          </div>
+
+        </article>
+
+      </div>
+    </main>
+  </div>
+
+
+  <!-- =====================================================
+       APP NAV
+  ====================================================== -->
+
+  <div id="app" class="hidden">
+
+    <nav class="container-fluid">
+      <ul>
+        <li>
+          <strong>Dark Buy</strong>
+        </li>
+      </ul>
+
+      <ul>
+        <li>
+          <a href="#" onclick="showPage('home'); return false;">
+            Задания
+          </a>
+        </li>
+
+        <li id="adminNavItem" class="hidden">
+          <a href="#" onclick="showPage('admin'); return false;">
+            Админка
+          </a>
+        </li>
+
+        <li>
+          <a
+            href="#"
+            role="button"
+            class="secondary-btn"
+            onclick="showPage('create'); return false;"
+          >
+            + Создать
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+    <!-- ===================================================
+         MAIN
+    ==================================================== -->
+
+    <main class="container">
+
+      <div id="homePage" class="page">
+
+        <div class="hero">
+          <hgroup>
+            <h1>
+              Делай задачи.<br>
+              Получай <span class="gradient">₽</span>.
+            </h1>
+
+            <h3>
+              Простая школьная площадка для небольших заданий.
+            </h3>
+          </hgroup>
+
+          <p class="muted">
+            Выбирай доступное задание или создай своё.
+            Личные данные других пользователей здесь не показываются.
+          </p>
+        </div>
+
+
+        <figure>
+          <div class="visual">◈</div>
+          <figcaption>
+            Dark Buy — задания без лишней публичной информации.
+          </figcaption>
+        </figure>
+
+
+        <div class="grid">
+          <section>
+            <h3>Доступные задания</h3>
+            <p class="muted">
+              Здесь появляются задания, которые ещё никто не взял.
+            </p>
+          </section>
+
+          <section>
+            <button
+              class="secondary-btn"
+              onclick="loadTasks()"
+            >
+              Обновить
+            </button>
+          </section>
+        </div>
+
+        <div id="taskList"></div>
+
+      </div>
+
+
+      <!-- =================================================
+           CREATE
+      ================================================== -->
+
+      <div id="createPage" class="page hidden">
+
+        <hgroup>
+          <h2>Создать задание</h2>
+          <h3>Опиши, что нужно сделать.</h3>
+        </hgroup>
+
+        <article>
+
+          <div id="createError"></div>
+
+          <label>
+            Что нужно сделать / принести
+            <input
+              id="taskWhat"
+              type="text"
+              maxlength="200"
+              placeholder="Например: принести сок"
+            >
+          </label>
+
+          <div class="grid">
+
+            <label>
+              Награда, ₽
+              <input
+                id="taskReward"
+                type="number"
+                min="0"
+                max="100000"
+                value="0"
+              >
+            </label>
+
+            <label>
+              Место
+              <input
+                id="taskPlace"
+                type="text"
+                maxlength="100"
+                placeholder="Кабинет 203"
+              >
+            </label>
+
+          </div>
+
+
+          <div class="grid">
+
+            <label>
+              Когда
+              <select id="taskWhen">
+                <option value="lesson">На уроке</option>
+                <option value="break">На перемене</option>
+                <option value="other">Другое</option>
+              </select>
+            </label>
+
+            <label>
+              Уточнение
+              <input
+                id="taskWhenNote"
+                type="text"
+                maxlength="100"
+                placeholder="После 3 урока"
+              >
+            </label>
+
+          </div>
+
+
+          <label>
+            Комментарий
+            <textarea
+              id="taskComment"
+              maxlength="500"
+              placeholder="Дополнительная информация"
+            ></textarea>
+          </label>
+
+
+          <button
+            class="primary-btn"
+            onclick="createTask()"
+          >
+            Опубликовать
+          </button>
+
+          <button
+            class="secondary-btn"
+            onclick="showPage('home')"
+          >
+            Отмена
+          </button>
+
+        </article>
+
+      </div>
+
+
+      <!-- =================================================
+           DETAIL
+      ================================================== -->
+
+      <div id="detailPage" class="page hidden">
+        <div id="detailContent"></div>
+      </div>
+
+
+      <!-- =================================================
+           MY TASKS
+      ================================================== -->
+
+      <div id="myPage" class="page hidden">
+
+        <hgroup>
+          <h2>Мои задания</h2>
+          <h3>Созданные и взятые тобой.</h3>
+        </hgroup>
+
+        <div id="myTasks"></div>
+
+      </div>
+
+
+      <!-- =================================================
+           PROFILE
+      ================================================== -->
+
+      <div id="profilePage" class="page hidden">
+
+        <hgroup>
+          <h2>Профиль</h2>
+          <h3>Минимум информации.</h3>
+        </hgroup>
+
+        <article>
+          <p class="muted">
+            Email используется только для авторизации и восстановления
+            аккаунта. Другие пользователи его не видят.
+          </p>
+
+          <p>
+            <strong id="profileEmail"></strong>
+          </p>
+
+          <p id="profileRole"></p>
+
+          <button
+            class="danger-btn"
+            onclick="logout()"
+          >
+            Выйти
+          </button>
+        </article>
+
+      </div>
+
+
+      <!-- =================================================
+           ADMIN
+      ================================================== -->
+
+      <div id="adminPage" class="page hidden">
+
+        <hgroup>
+          <h2>Админка</h2>
+          <h3>Модерация Dark Buy</h3>
+        </hgroup>
+
+
+        <div class="grid">
+
+          <div class="stat">
+            <strong id="statUsers">—</strong>
+            <span class="muted">Пользователей</span>
+          </div>
+
+          <div class="stat">
+            <strong id="statBlocked">—</strong>
+            <span class="muted">Заблокировано</span>
+          </div>
+
+          <div class="stat">
+            <strong id="statTasks">—</strong>
+            <span class="muted">Заданий</span>
+          </div>
+
+        </div>
+
+
+        <article class="admin-card">
+
+          <h3>Пользователи</h3>
+
+          <div id="adminUsers"></div>
+
+        </article>
+
+
+        <article class="admin-card">
+
+          <h3>Все задания</h3>
+
+          <div id="adminTasks"></div>
+
+        </article>
+
+      </div>
+
+    </main>
+
+
+    <!-- ===================================================
+         SUBSCRIBE / INFO
+    ==================================================== -->
+
+    <section aria-label="Subscribe example">
+      <div class="container">
+        <article>
+          <hgroup>
+            <h2>Dark Buy</h2>
+            <h3>Минимум данных. Максимум простоты.</h3>
+          </hgroup>
+
+          <p class="muted">
+            Не публикуй чужие личные данные и не пытайся раскрывать
+            личность другого пользователя.
+          </p>
+        </article>
+      </div>
+    </section>
+
+
+    <footer class="container">
+      <small>
+        <a href="#" onclick="showPage('home'); return false;">Dark Buy</a>
+        •
+        <a href="#" onclick="showPage('profile'); return false;">Профиль</a>
+        •
+        <a href="#" onclick="showPage('my'); return false;">Мои задания</a>
+      </small>
+    </footer>
+
+  </div>
+
+
+<script>
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  "https://jnpndtlpsucsxhzjzqnl.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_2ECP-xx_9h7EX9sKKCPS8w_CtQdB9sr";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let currentProfile = null;
+let currentTasks = [];
+let isAdmin = false;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+function withTimeout(promise, ms = 12000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(
+        () => reject(
+          new Error(
+            "Сервер слишком долго не отвечает. Проверь интернет и настройки Supabase."
+          )
+        ),
+        ms
+      )
+    )
+  ]);
+}
+
+
+function showError(id, message) {
+  $(id).innerHTML =
+    `<div class="error">${escapeHtml(message)}</div>`;
+}
+
+
+function showSuccess(id, message) {
+  $(id).innerHTML =
+    `<div class="success">${escapeHtml(message)}</div>`;
+}
+
+
+function clearMessage(id) {
+  if ($(id)) $(id).innerHTML = "";
+}
+
+
+function togglePassword(inputId, button) {
+  const input = $(inputId);
+
+  if (!input) return;
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "🙈";
+    button.setAttribute("aria-label", "Скрыть пароль");
+  } else {
+    input.type = "password";
+    button.textContent = "👁";
+    button.setAttribute("aria-label", "Показать пароль");
+  }
+}
+
+
+/* =========================================================
+   AUTH SCREENS
+========================================================= */
+
+function hideAuthBoxes() {
+  [
+    "registerBox",
+    "loginBox",
+    "recoveryBox",
+    "updatePasswordBox",
+    "confirmBox"
+  ].forEach(id => $(id).classList.add("hidden"));
+}
+
+
+function showRegister() {
+  hideAuthBoxes();
+  $("registerBox").classList.remove("hidden");
+}
+
+
+function showLogin() {
+  hideAuthBoxes();
+  $("loginBox").classList.remove("hidden");
+}
+
+
+function showRecovery() {
+  hideAuthBoxes();
+  $("recoveryBox").classList.remove("hidden");
+}
+
+
+function showConfirm() {
+  hideAuthBoxes();
+  $("confirmBox").classList.remove("hidden");
+}
+
+
+function showUpdatePassword() {
+  $("auth").classList.remove("hidden");
+  hideAuthBoxes();
+  $("updatePasswordBox").classList.remove("hidden");
+}
+
+
+function showAuth() {
+  $("boot").classList.add("hidden");
+  $("app").classList.add("hidden");
+  $("auth").classList.remove("hidden");
+  showLogin();
+}
+
+
+function showApp() {
+  $("boot").classList.add("hidden");
+  $("auth").classList.add("hidden");
+  $("app").classList.remove("hidden");
+}
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+async function register() {
+
+  clearMessage("registerError");
+
+  const email =
+    $("registerEmail").value.trim();
+
+  const password =
+    $("registerPassword").value;
+
+  const password2 =
+    $("registerPassword2").value;
+
+  if (!email || !password) {
+    showError(
+      "registerError",
+      "Заполни email и пароль."
+    );
+    return;
+  }
+
+  if (password.length < 6) {
+    showError(
+      "registerError",
+      "Пароль должен быть минимум 6 символов."
+    );
+    return;
+  }
+
+  if (password !== password2) {
+    showError(
+      "registerError",
+      "Пароли не совпадают."
+    );
+    return;
+  }
+
+  const button = $("registerButton");
+
+  button.disabled = true;
+  button.textContent = "Создаём аккаунт…";
+
+  try {
+
+    const redirectUrl =
+      window.location.origin +
+      window.location.pathname;
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: redirectUrl
+          }
+        })
+      );
+
+    if (error) throw error;
+
+    if (
+      data.user &&
+      !data.user.email_confirmed_at
+    ) {
+      showConfirm();
+      return;
+    }
+
+    if (data.session) {
+      await finishLogin(data.user);
+    } else {
+      showConfirm();
+    }
+
+  } catch (error) {
+
+    showError(
+      "registerError",
+      translateError(error.message)
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Зарегистрироваться";
+  }
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login() {
+
+  clearMessage("loginError");
+
+  const email =
+    $("loginEmail").value.trim();
+
+  const password =
+    $("loginPassword").value;
+
+  if (!email || !password) {
+    showError(
+      "loginError",
+      "Заполни email и пароль."
+    );
+    return;
+  }
+
+  const button = $("loginButton");
+
+  button.disabled = true;
+  button.textContent = "Входим…";
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        })
+      );
+
+    if (error) throw error;
+
+    if (
+      data.user &&
+      !data.user.email_confirmed_at
+    ) {
+      await supabaseClient.auth.signOut();
+
+      showConfirm();
+      return;
+    }
+
+    await finishLogin(data.user);
+
+  } catch (error) {
+
+    showError(
+      "loginError",
+      translateError(error.message)
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Войти";
+  }
+}
+
+
+/* =========================================================
+   RECOVERY
+========================================================= */
+
+async function sendRecovery() {
+
+  clearMessage("recoveryError");
+
+  const email =
+    $("recoveryEmail").value.trim();
+
+  if (!email) {
+    showError(
+      "recoveryError",
+      "Введи email."
+    );
+    return;
+  }
+
+  try {
+
+    const redirectUrl =
+      window.location.origin +
+      window.location.pathname;
+
+    const { error } =
+      await withTimeout(
+        supabaseClient.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo: redirectUrl
+          }
+        )
+      );
+
+    if (error) throw error;
+
+    showSuccess(
+      "recoveryError",
+      "Письмо отправлено. Проверь почту."
+    );
+
+  } catch (error) {
+
+    showError(
+      "recoveryError",
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   UPDATE PASSWORD
+========================================================= */
+
+async function updatePassword() {
+
+  clearMessage("updatePasswordError");
+
+  const password =
+    $("newPassword").value;
+
+  if (password.length < 6) {
+    showError(
+      "updatePasswordError",
+      "Пароль должен быть минимум 6 символов."
+    );
+    return;
+  }
+
+  try {
+
+    const { error } =
+      await withTimeout(
+        supabaseClient.auth.updateUser({
+          password
+        })
+      );
+
+    if (error) throw error;
+
+    showSuccess(
+      "updatePasswordError",
+      "Пароль изменён."
+    );
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+
+  } catch (error) {
+
+    showError(
+      "updatePasswordError",
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   FINISH LOGIN
+========================================================= */
+
+async function finishLogin(user) {
+
+  currentUser = user;
+
+  await loadProfile();
+
+  if (!currentProfile) {
+    await supabaseClient.auth.signOut();
+
+    showAuth();
+
+    showError(
+      "loginError",
+      "Не удалось загрузить профиль."
+    );
+
+    return;
+  }
+
+  if (currentProfile.blocked) {
+    showBlocked();
+    return;
+  }
+
+  isAdmin =
+    currentProfile.role === "admin";
+
+  $("adminNavItem").classList.toggle(
+    "hidden",
+    !isAdmin
+  );
+
+  showApp();
+
+  showPage("home");
+
+  await loadTasks();
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function loadProfile() {
+
+  if (!currentUser) return;
+
+  const { data, error } =
+    await withTimeout(
+      supabaseClient
+        .from("user_profiles")
+        .select("role, blocked")
+        .eq("user_id", currentUser.id)
+        .maybeSingle()
+    );
+
+  if (error) throw error;
+
+  currentProfile = data;
+
+  if (data) {
+    isAdmin = data.role === "admin";
+  }
+}
+
+
+/* =========================================================
+   BLOCKED SCREEN
+========================================================= */
+
+function showBlocked() {
+
+  $("boot").classList.add("hidden");
+  $("auth").classList.add("hidden");
+  $("app").classList.remove("hidden");
+
+  document.querySelectorAll(".page")
+    .forEach(page => page.classList.add("hidden"));
+
+  $("homePage").classList.remove("hidden");
+
+  $("homePage").innerHTML = `
+    <div class="form-box">
+      <article class="auth-card">
+        <h1>Аккаунт заблокирован</h1>
+
+        <p class="muted">
+          Доступ к Dark Buy временно ограничен администратором.
+        </p>
+
+        <button
+          class="danger-btn"
+          onclick="logout()"
+        >
+          Выйти
+        </button>
+      </article>
+    </div>
+  `;
+
+  $("adminNavItem").classList.add("hidden");
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(page) {
+
+  if (!currentUser) {
+    showAuth();
+    return;
+  }
+
+  if (currentProfile?.blocked) {
+    showBlocked();
+    return;
+  }
+
+  if (
+    page === "admin" &&
+    !isAdmin
+  ) {
+    showPage("home");
+    return;
+  }
+
+  document.querySelectorAll(".page")
+    .forEach(el => el.classList.add("hidden"));
+
+  const target = $(page + "Page");
+
+  if (!target) return;
+
+  target.classList.remove("hidden");
+
+  if (page === "home") {
+    loadTasks();
+  }
+
+  if (page === "my") {
+    loadMyTasks();
+  }
+
+  if (page === "profile") {
+    renderProfile();
+  }
+
+  if (page === "admin") {
+    loadAdmin();
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+/* =========================================================
+   CREATE TASK
+========================================================= */
+
+async function createTask() {
+
+  clearMessage("createError");
+
+  if (!currentUser) {
+    showAuth();
+    return;
+  }
+
+  if (currentProfile?.blocked) {
+    showBlocked();
+    return;
+  }
+
+  const what =
+    $("taskWhat").value.trim();
+
+  const reward =
+    Number($("taskReward").value);
+
+  const place =
+    $("taskPlace").value.trim();
+
+  const when_type =
+    $("taskWhen").value;
+
+  const when_note =
+    $("taskWhenNote").value.trim();
+
+  const comment =
+    $("taskComment").value.trim();
+
+  if (!what || !place) {
+    showError(
+      "createError",
+      "Заполни задание и место."
+    );
+    return;
+  }
+
+  try {
+
+    const { error } =
+      await withTimeout(
+        supabaseClient
+          .from("tasks")
+          .insert({
+            creator_id: currentUser.id,
+            what,
+            reward: Number.isFinite(reward)
+              ? reward
+              : 0,
+            place,
+            when_type,
+            when_note,
+            comment,
+            status: "available"
+          })
+      );
+
+    if (error) throw error;
+
+    $("taskWhat").value = "";
+    $("taskReward").value = "0";
+    $("taskPlace").value = "";
+    $("taskWhenNote").value = "";
+    $("taskComment").value = "";
+
+    showPage("home");
+
+  } catch (error) {
+
+    showError(
+      "createError",
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   LOAD TASKS
+========================================================= */
+
+async function loadTasks() {
+
+  if (!currentUser) return;
+
+  const list = $("taskList");
+
+  list.innerHTML =
+    `<p class="muted">Загрузка заданий…</p>`;
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient
+          .from("tasks")
+          .select("*")
+          .eq("status", "available")
+          .order("created_at", {
+            ascending: false
+          })
+      );
+
+    if (error) throw error;
+
+    currentTasks = data || [];
+
+    renderTasks(
+      currentTasks,
+      list
+    );
+
+  } catch (error) {
+
+    list.innerHTML =
+      `<div class="error">
+        ${escapeHtml(translateError(error.message))}
+      </div>`;
+  }
+}
+
+
+/* =========================================================
+   RENDER TASKS
+========================================================= */
+
+function renderTasks(tasks, target) {
+
+  if (!tasks.length) {
+
+    target.innerHTML = `
+      <article>
+        <h3>Пока пусто</h3>
+        <p class="muted">
+          Новых заданий пока нет.
+        </p>
+
+        <button
+          class="primary-btn"
+          onclick="showPage('create')"
+        >
+          Создать первое
+        </button>
+      </article>
+    `;
+
+    return;
+  }
+
+  target.innerHTML =
+    tasks.map(task => `
+      <article class="task-card">
+
+        <div class="grid">
+
+          <div>
+            <div class="task-title">
+              ${escapeHtml(task.what)}
+            </div>
+
+            <div class="meta">
+              <span class="pill">
+                📍 ${escapeHtml(task.place)}
+              </span>
+
+              <span class="pill">
+                🕐 ${escapeHtml(
+                  whenLabel(task.when_type)
+                )}
+              </span>
+
+              ${
+                task.when_note
+                  ? `<span class="pill">
+                      ${escapeHtml(task.when_note)}
+                    </span>`
+                  : ""
+              }
+            </div>
+          </div>
+
+          <div>
+            <div class="reward">
+              ${escapeHtml(task.reward)} ₽
+            </div>
+          </div>
+
+        </div>
+
+        <button
+          class="primary-btn"
+          onclick="openTask('${task.id}')"
+        >
+          Посмотреть
+        </button>
+
+      </article>
+    `)
+    .join("");
+}
+
+
+/* =========================================================
+   TASK DETAIL
+========================================================= */
+
+async function openTask(id) {
+
+  const { data, error } =
+    await withTimeout(
+      supabaseClient
+        .from("tasks")
+        .select("*")
+        .eq("id", id)
+        .single()
+    );
+
+  if (error) {
+    alert(translateError(error.message));
+    return;
+  }
+
+  $("detailContent").innerHTML = `
+
+    <article>
+
+      <div class="meta">
+        <span class="pill good">
+          Доступно
+        </span>
+
+        <span class="pill">
+          ${escapeHtml(data.reward)} ₽
+        </span>
+      </div>
+
+      <h2>
+        ${escapeHtml(data.what)}
+      </h2>
+
+      <p>
+        📍 ${escapeHtml(data.place)}
+      </p>
+
+      <p>
+        🕐 ${escapeHtml(
+          whenLabel(data.when_type)
+        )}
+        ${
+          data.when_note
+            ? " — " + escapeHtml(data.when_note)
+            : ""
+        }
+      </p>
+
+      ${
+        data.comment
+          ? `
+            <hr>
+            <p class="muted">
+              ${escapeHtml(data.comment)}
+            </p>
+          `
+          : ""
+      }
+
+      <button
+        class="primary-btn"
+        onclick="takeTask('${data.id}')"
+      >
+        Взять задание
+      </button>
+
+      <button
+        class="secondary-btn"
+        onclick="showPage('home')"
+      >
+        Назад
+      </button>
+
+    </article>
+  `;
+
+  showPage("detail");
+}
+
+
+/* =========================================================
+   TAKE TASK
+========================================================= */
+
+async function takeTask(id) {
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient.rpc(
+          "take_task",
+          {
+            p_task_id: id
+          }
+        )
+      );
+
+    if (error) throw error;
+
+    renderTakenTask(data);
+
+  } catch (error) {
+
+    alert(
+      translateError(error.message)
+    );
+
+    showPage("home");
+  }
+}
+
+
+/* =========================================================
+   TAKEN TASK
+========================================================= */
+
+function renderTakenTask(task) {
+
+  $("detailContent").innerHTML = `
+
+    <article>
+
+      <span class="pill warning">
+        Взято
+      </span>
+
+      <h2>
+        ${escapeHtml(task.what)}
+      </h2>
+
+      <p>
+        📍 ${escapeHtml(task.place)}
+      </p>
+
+      <p>
+        Награда:
+        <strong>
+          ${escapeHtml(task.reward)} ₽
+        </strong>
+      </p>
+
+      <hr>
+
+      <p class="muted">
+        Когда начнёшь выполнять задание,
+        нажми кнопку ниже.
+      </p>
+
+      <button
+        class="primary-btn"
+        onclick="changeTaskStatus(
+          '${task.id}',
+          'in_progress'
+        )"
+      >
+        Начать выполнение
+      </button>
+
+      <button
+        class="secondary-btn"
+        onclick="showPage('my')"
+      >
+        Мои задания
+      </button>
+
+    </article>
+  `;
+
+  showPage("detail");
+}
+
+
+/* =========================================================
+   CHANGE STATUS
+========================================================= */
+
+async function changeTaskStatus(id, status) {
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient.rpc(
+          "set_task_status",
+          {
+            p_task_id: id,
+            p_status: status
+          }
+        )
+      );
+
+    if (error) throw error;
+
+    if (status === "in_progress") {
+
+      $("detailContent").innerHTML = `
+
+        <article>
+
+          <span class="pill warning">
+            В процессе
+          </span>
+
+          <h2>
+            ${escapeHtml(data.what)}
+          </h2>
+
+          <p>
+            📍 ${escapeHtml(data.place)}
+          </p>
+
+          <button
+            class="primary-btn"
+            onclick="changeTaskStatus(
+              '${data.id}',
+              'completed'
+            )"
+          >
+            Завершить задание
+          </button>
+
+          <button
+            class="secondary-btn"
+            onclick="showPage('my')"
+          >
+            Мои задания
+          </button>
+
+        </article>
+      `;
+
+    } else {
+
+      $("detailContent").innerHTML = `
+
+        <article>
+
+          <span class="pill good">
+            Завершено
+          </span>
+
+          <h2>
+            Задание завершено
+          </h2>
+
+          <p>
+            ${escapeHtml(data.what)}
+          </p>
+
+          <p>
+            Награда:
+            <strong>
+              ${escapeHtml(data.reward)} ₽
+            </strong>
+          </p>
+
+          <button
+            class="primary-btn"
+            onclick="showPage('home')"
+          >
+            К заданиям
+          </button>
+
+        </article>
+      `;
+    }
+
+  } catch (error) {
+
+    alert(
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   MY TASKS
+========================================================= */
+
+async function loadMyTasks() {
+
+  const target = $("myTasks");
+
+  target.innerHTML =
+    `<p class="muted">Загрузка…</p>`;
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient
+          .from("tasks")
+          .select("*")
+          .or(
+            `creator_id.eq.${currentUser.id},taker_id.eq.${currentUser.id}`
+          )
+          .order("created_at", {
+            ascending: false
+          })
+      );
+
+    if (error) throw error;
+
+    if (!data.length) {
+
+      target.innerHTML = `
+        <article>
+          <h3>Пока ничего нет</h3>
+          <p class="muted">
+            Создай или возьми задание.
+          </p>
+        </article>
+      `;
+
+      return;
+    }
+
+    target.innerHTML =
+      data.map(task => {
+
+        const status =
+          statusLabel(task.status);
+
+        return `
+          <article class="task-card">
+
+            <div class="grid">
+
+              <div>
+                <div class="task-title">
+                  ${escapeHtml(task.what)}
+                </div>
+
+                <div class="meta">
+                  <span class="pill ${status.class}">
+                    ${status.text}
+                  </span>
+
+                  <span class="pill">
+                    ${escapeHtml(task.place)}
+                  </span>
+                </div>
+              </div>
+
+              <div class="reward">
+                ${escapeHtml(task.reward)} ₽
+              </div>
+
+            </div>
+
+            <button
+              class="secondary-btn"
+              onclick="openTask('${task.id}')"
+            >
+              Открыть
+            </button>
+
+          </article>
+        `;
+
+      }).join("");
+
+  } catch (error) {
+
+    target.innerHTML =
+      `<div class="error">
+        ${escapeHtml(translateError(error.message))}
+      </div>`;
+  }
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function renderProfile() {
+
+  if (!currentUser) return;
+
+  $("profileEmail").textContent =
+    currentUser.email || "";
+
+  $("profileRole").innerHTML =
+    isAdmin
+      ? `<span class="pill good">Администратор</span>`
+      : `<span class="pill">Пользователь</span>`;
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+async function loadAdmin() {
+
+  if (!isAdmin) {
+    showPage("home");
+    return;
+  }
+
+  $("adminUsers").innerHTML =
+    `<p class="muted">Загрузка пользователей…</p>`;
+
+  $("adminTasks").innerHTML =
+    `<p class="muted">Загрузка заданий…</p>`;
+
+  try {
+
+    const usersResult =
+      await withTimeout(
+        supabaseClient.rpc(
+          "admin_list_users"
+        )
+      );
+
+    if (usersResult.error)
+      throw usersResult.error;
+
+    const users =
+      usersResult.data || [];
+
+    const { data: tasks, error: taskError } =
+      await withTimeout(
+        supabaseClient
+          .from("tasks")
+          .select("*")
+          .order("created_at", {
+            ascending: false
+          })
+      );
+
+    if (taskError)
+      throw taskError;
+
+    $("statUsers").textContent =
+      users.length;
+
+    $("statBlocked").textContent =
+      users.filter(u => u.blocked).length;
+
+    $("statTasks").textContent =
+      tasks.length;
+
+    renderAdminUsers(users);
+    renderAdminTasks(tasks);
+
+  } catch (error) {
+
+    $("adminUsers").innerHTML =
+      `<div class="error">
+        ${escapeHtml(translateError(error.message))}
+      </div>`;
+  }
+}
+
+
+/* =========================================================
+   ADMIN USERS
+========================================================= */
+
+function renderAdminUsers(users) {
+
+  if (!users.length) {
+    $("adminUsers").innerHTML =
+      `<p class="muted">Пользователей нет.</p>`;
+    return;
+  }
+
+  $("adminUsers").innerHTML = `
+
+    <div class="admin-table">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Роль</th>
+            <th>Статус</th>
+            <th>Действие</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${users.map(user => {
+
+            const isSelf =
+              user.user_id === currentUser.id;
+
+            const isOtherAdmin =
+              user.role === "admin" &&
+              !isSelf;
+
+            let action = "";
+
+            if (isSelf) {
+
+              action =
+                `<span class="muted">Это вы</span>`;
+
+            } else if (isOtherAdmin) {
+
+              action =
+                `<span class="muted">Администратор</span>`;
+
+            } else {
+
+              action = user.blocked
+
+                ? `
+                  <button
+                    class="small-btn primary-btn"
+                    onclick="setBlocked(
+                      '${user.user_id}',
+                      false
+                    )"
+                  >
+                    Разблокировать
+                  </button>
+                `
+
+                : `
+                  <button
+                    class="small-btn danger-btn"
+                    onclick="setBlocked(
+                      '${user.user_id}',
+                      true
+                    )"
+                  >
+                    Заблокировать
+                  </button>
+                `;
+            }
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtml(user.email)}
+                </td>
+
+                <td>
+                  ${
+                    user.role === "admin"
+                      ? "Админ"
+                      : "Пользователь"
+                  }
+                </td>
+
+                <td>
+                  ${
+                    user.blocked
+                      ? `<span class="pill danger">
+                          Заблокирован
+                        </span>`
+                      : `<span class="pill good">
+                          Активен
+                        </span>`
+                  }
+                </td>
+
+                <td>
+                  ${action}
+                </td>
+
+              </tr>
+            `;
+
+          }).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   ADMIN BLOCK
+========================================================= */
+
+async function setBlocked(userId, blocked) {
+
+  const question =
+    blocked
+      ? "Заблокировать пользователя?"
+      : "Разблокировать пользователя?";
+
+  if (!confirm(question))
+    return;
+
+  try {
+
+    const { error } =
+      await withTimeout(
+        supabaseClient.rpc(
+          "admin_set_blocked",
+          {
+            p_user_id: userId,
+            p_blocked: blocked
+          }
+        )
+      );
+
+    if (error) throw error;
+
+    await loadAdmin();
+
+  } catch (error) {
+
+    alert(
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   ADMIN TASKS
+========================================================= */
+
+function renderAdminTasks(tasks) {
+
+  if (!tasks.length) {
+
+    $("adminTasks").innerHTML =
+      `<p class="muted">Заданий нет.</p>`;
+
+    return;
+  }
+
+  $("adminTasks").innerHTML = `
+
+    <div class="admin-table">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Задание</th>
+            <th>₽</th>
+            <th>Место</th>
+            <th>Статус</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${tasks.map(task => {
+
+            const status =
+              statusLabel(task.status);
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtml(task.what)}
+                </td>
+
+                <td>
+                  ${escapeHtml(task.reward)}
+                </td>
+
+                <td>
+                  ${escapeHtml(task.place)}
+                </td>
+
+                <td>
+                  <span class="pill ${status.class}">
+                    ${status.text}
+                  </span>
+                </td>
+
+                <td>
+                  <button
+                    class="small-btn danger-btn"
+                    onclick="adminDeleteTask(
+                      '${task.id}'
+                    )"
+                  >
+                    Удалить
+                  </button>
+                </td>
+
+              </tr>
+            `;
+
+          }).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   ADMIN DELETE TASK
+========================================================= */
+
+async function adminDeleteTask(id) {
+
+  if (!confirm(
+    "Удалить это задание без возможности восстановления?"
+  )) {
+    return;
+  }
+
+  try {
+
+    const { error } =
+      await withTimeout(
+        supabaseClient.rpc(
+          "admin_delete_task",
+          {
+            p_task_id: id
+          }
+        )
+      );
+
+    if (error) throw error;
+
+    await loadAdmin();
+
+  } catch (error) {
+
+    alert(
+      translateError(error.message)
+    );
+  }
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+function whenLabel(type) {
+
+  const labels = {
+    lesson: "На уроке",
+    break: "На перемене",
+    other: "Другое"
+  };
+
+  return labels[type] || type;
+}
+
+
+function statusLabel(status) {
+
+  const labels = {
+    available: {
+      text: "Доступно",
+      class: "good"
+    },
+
+    taken: {
+      text: "Взято",
+      class: "warning"
+    },
+
+    in_progress: {
+      text: "В процессе",
+      class: "warning"
+    },
+
+    completed: {
+      text: "Завершено",
+      class: "good"
+    }
+  };
+
+  return labels[status] || {
+    text: status,
+    class: ""
+  };
+}
+
+
+/* =========================================================
+   ERROR TRANSLATION
+========================================================= */
+
+function translateError(message) {
+
+  if (!message)
+    return "Произошла ошибка.";
+
+  const text =
+    String(message);
+
+  if (
+    text.includes("Invalid login credentials")
+  ) {
+    return "Неверный email или пароль.";
+  }
+
+  if (
+    text.includes("Email not confirmed")
+  ) {
+    return "Сначала подтверди email.";
+  }
+
+  if (
+    text.includes("User already registered")
+  ) {
+    return "Этот email уже зарегистрирован.";
+  }
+
+  if (
+    text.includes("Password should be at least")
+  ) {
+    return "Пароль слишком короткий.";
+  }
+
+  if (
+    text.includes("Аккаунт заблокирован")
+  ) {
+    return "Аккаунт заблокирован.";
+  }
+
+  if (
+    text.includes("Нет доступа")
+  ) {
+    return "Недостаточно прав.";
+  }
+
+  return text;
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+  currentTasks = [];
+  isAdmin = false;
+
+  $("app").classList.add("hidden");
+  $("auth").classList.remove("hidden");
+
+  showLogin();
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (event, session) => {
+
+    if (
+      event === "PASSWORD_RECOVERY"
+    ) {
+      showUpdatePassword();
+      return;
+    }
+
+    if (
+      event === "SIGNED_OUT"
+    ) {
+      currentUser = null;
+      currentProfile = null;
+      isAdmin = false;
+
+      showAuth();
+      return;
+    }
+  }
+);
+
+
+/* =========================================================
+   BOOT
+========================================================= */
+
+async function boot() {
+
+  try {
+
+    const { data, error } =
+      await withTimeout(
+        supabaseClient.auth.getSession()
+      );
+
+    if (error) throw error;
+
+    const session =
+      data?.session;
+
+    if (!session?.user) {
+
+      showAuth();
+      return;
+    }
+
+    const user =
+      session.user;
+
+    if (!user.email_confirmed_at) {
+
+      await supabaseClient.auth.signOut();
+
+      $("boot").classList.add("hidden");
+      $("auth").classList.remove("hidden");
+
+      showConfirm();
+
+      return;
+    }
+
+    await finishLogin(user);
+
+  } catch (error) {
+
+    $("boot").classList.add("hidden");
+    $("auth").classList.remove("hidden");
+
+    showLogin();
+
+    showError(
+      "loginError",
+      translateError(error.message)
+    );
+  }
+}
+
+
+boot();
+</script>
+
+</body>
+</html>
